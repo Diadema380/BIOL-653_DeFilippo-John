@@ -1,6 +1,6 @@
 **# BIOL-653_DeFilippo-John**
 
-_Created a new repository on the command line"_
+_Create a new repository on the command line_
 
 --echo "# BIOL-653_DeFilippo-John" >> README.md
 --git init
