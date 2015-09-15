@@ -1,7 +1,0 @@
----
-title: "My first story"
-output: html_document
----
-
-once upon a midnight dreary
-while i pondered weak and weary
