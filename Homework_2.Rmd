@@ -1,0 +1,84 @@
+---
+title: "Homework 2"
+author: "John DeFilippo"
+date: "September 29, 2015"
+output: html_document
+---
+
+
+# 1. Use points and colors to identify continents
+
+ggplot(data = gapminder, aes(x = continent, fill = continent)) +
+  geom_histogram()
+
+# 2. The per capita gdp has a very large range; use a transformation to linearize the data
+
+str(gapminder)
+
+ggplot(data = gapminder, aes(x = log10(gdpPercap), y=lifeExp, colour = continent)) +
+  geom_point()
+
+# 3. Include a simple linear fit to the transformed data
+
+ggplot(data = gapminder, aes(x = log10(gdpPercap), y=lifeExp, colour = continent)) +
+  geom_point() +
+  geom_smooth(method = lm, se = FALSE)
+
+# 4. Plot the density functions of life expectancy for each continent
+
+ggplot(data = gapminder, aes(x = lifeExp, fill = continent)) +
+  geom_density() +
+  facet_wrap( ~ year, ncol = 4)
+
+# 5. Fix the bottom continent labels
+
+ggplot(data = gapminder, aes(x = continent, y = lifeExp)) +
+  geom_boxplot() +
+  facet_wrap( ~ year, ncol = 4) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# 6. 
+
+ggplot(data = gapminder, aes(x = lifeExp, fill = continent)) +
+  geom_density()
+
+# 7. Plot the mean life expectancy on a density plot for Asia
+
+ggplot(data = gapminder, aes(x = lifeExp, fill = (continent[3]))) +
+  geom_density() +
+  geom_vline(aes(xintercept = mean(lifeExp)))
+                        
+# 8a. Create a data frame of the mean life expectancies for each continent
+
+data.frame(gapminder) %>% 
+  group_by(continent) %>%
+  summarize(mean_lifeExp = mean(lifeExp))
+  
+# 8b. Plot the density plot of life expectancies for each continent and draw a vertical line to mark the mean life expectancy for each continent.
+
+# I can't get the mean to behave independently on each facet. I know it has something to do with creating the data.frame, but I couldn't get it to work.
+
+ggplot(data = gapminder, aes(x = lifeExp, fill = continent)) +
+  geom_density() +
+  geom_vline(aes(xintercept = mean(lifeExp))) +
+  facet_wrap( ~ continent, ncol = 3)
+
+# Find the mistakes
+
+mean_lifeExp <- mean(hw_gapminder$lifeExpe) # Typo... should be lifeExp
+mean_lifeExp <- mean(hw_gapminder$lifeExp)
+
+# need 2nd concatenate
+small_set <- hw_gapminder[c(1, 2, 3, 4, 1300:1304), ('country', 'continent', 'year')]
+small_set <- hw_gapminder[c(1, 2, 3, 4, 1300:1304), c('country', 'continent', 'year')]
+
+mean_gdp <- mean(hw_gapminder$gdpPercap)
+summary(hw_gapminder$gdpPercap)
+# has 5 NAs that need to be removed
+mean_gdp <- mean(hw_gapminder$gdpPercap, na.rm=TRUE)
+
+max_country <- hw_gapminder$country[which(hw_gapminder$lifeExp = max(hw_gapminder$lifeExp))]
+# need == for equivalence
+
+max_country <- hw_gapminder$country[which(hw_gapminder$lifeExp == max(hw_gapminder$lifeExp))]
+# I get Japan, but also 142 levels
