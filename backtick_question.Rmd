@@ -1,0 +1,76 @@
+---
+title: "backtick_dirname"
+author: "John DeFilippo"
+date: "October 6, 2015"
+output: html_document
+---
+```{r}
+dir()
+```
+(I'm running the above code chunk... why doesn't the output show? Anyway, it's:
+[1] "Florida"  "St-Croix")
+
+I'm working with Bioconductor packages for flow cytometry data.
+
+The FCS flow cytometry data files are flowFrame objects.
+
+A sub-directory containing multiple FCS files is a flowSet list.
+
+I've already created a flowset list of the parent directory (FL-SC_Diadema) of two sub-directories, Florida and St-Croix, which makes each of the elements of the list (Florida and St-Croix) it's own flowSet object.
+
+Note the names of the sub-directories.
+"Florida"  "St-Croix"
+
+Now...
+
+flowset.list
+
+(the code chunk flowset.list enclosed in r and ticks runs, but I can't get the document to knit with it, get errors:
+Quitting from lines 24-25 (Preview-b4d7f6f0ac2.Rmd) 
+Error in eval(expr, envir, enclos) : object 'flowset.list' not found
+Calls: <Anonymous> ... handle -> withCallingHandlers -> withVisible -> eval -> eval
+Execution halted)
+
+So here's the output of flowset.list
+
+$Florida
+A flowSet with 20 experiments.
+
+  column names:
+  EV FL1 FL2 FL3 SS TIME
+
+$`St-Croix`
+(this is weird... in the rmd doc, St-Croix is appearing as $ St-Croix, but in the console it's $`St-Croix')
+
+A flowSet with 76 experiments.
+
+  column names:
+  EV FL1 FL2 FL3 SS TIME
+
+The list element (Florida sub-directory) is what you'd expect, $Florida.
+
+But the list element of the St-Croix sub-directory is enclosed in backticks.
+
+Further confounding things... I wrote a function that contained this loop:
+
+if (parent == 'FL-SC_Diadema') {
+(why does rmd put the lines of code between the brackets in a box?)
+
+      St-Croix.pool <- pooled.list$`pooled.St-Croix`
+      print(St-Croix.pool)
+
+      transform.estlgcl(St-Croix.pool, 'SS', 1) # a called function from within this function; it returns frame.trans
+      trans.St-Croix.pool <- frame.trans
+}
+
+and would give these errors:
+
+Error in St - Croix.pool <- pooled.list$`pooled.St-Croix` :  object 'St' not found
+
+Error in estlgcl.folder("FL-SC_Diadema") : object 'Croix' not found
+
+For some reason it's seeing or putting a space in the name. 
+
+I'm guessing this is related to why it needed to put backticks around the name. 
+
+Any thoughts?
