@@ -150,7 +150,7 @@ pop_list
 
 # e) Yay! Time for more plots! See if you can make this one!
 
-# This plots an individual plot...
+# This works to plot an individual plot...
 ggplot(data = pop_list[[11]], aes(x = gen, y = N)) + 
   geom_line()
 
@@ -163,8 +163,33 @@ for (i in 1:length(pop_list)){
 
 # f) One last bit of fun. Let’s use some dplyr to grab the last 10 rows for each group of r values.
 
-# I made a list of data frames, and can't use dplyr on a list
+# I made a list of data frames to avoid having to use rbind, but can't use dplyr on a list, sooo... rbind it is
+
+# create a new data frame with rows for r, gen, and NA
+new_popdf <- data.frame(r = NA, gen = NA, N = NA)
+# create a storage data frame for each iteration of a loop
+popdf.st <- data.frame()
+# every index of pop_list contains a data frame for a value of r... loop through it
+for (i in 1:length(pop_list)){
+  # put the data frame for the value of r into the storage data frame
+  popdf.st <- pop_list[[i]]
+  # rbind the rows of the storage data frame into the new data frame
+  new_popdf <- rbind(new_popdf, popdf.st)
+}
+# let's see it
+new_popdf
+
+# get the last 10 rows for each group of r, which are gen 91-100
+popdf.r <- filter(new_popdf, gen > 90)
+# let's see it
+popdf.r
 
 # Now let’s plot those values and see what we get!
-  
-# 'Woot!', 'Great!', 'Awesome!', 'Yay', 'fun'...? I must be using the wrong version of R
+
+plot.r <- ggplot(data = popdf.r, aes(x = r, y = N)) + 
+  geom_point()
+
+# let's see it
+plot.r
+
+# 'Woot!', 'Great!', 'Awesome!', 'Yay', 'fun'...? I must be using the wrong version of R :-()
