@@ -202,4 +202,4 @@ plot.r <- ggplot(data = popdf.r, aes(x = r, y = N)) +
 # let's see it
 plot.r
 
-# 'Woot!', 'Great!', 'Awesome!', 'Yay', 'fun'...? I must be using the wrong version of R :-()
+# 'Woot!', 'Great!', 'Awesome!', 'Yay', 'fun'...? I must be using the wrong version of R :-(
