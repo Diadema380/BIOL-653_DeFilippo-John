@@ -161,6 +161,16 @@ for (i in 1:length(pop_list)){
     geom_line()
 }
 
+# ggplot has complained about lists before, so even though each list index is a data frame, let's try putting each list index into a new data frame and plot that
+new.df <- data.frame(r = NA, gen = NA, N = NA)
+for (i in 1:length(pop_list)){
+  new.df <- pop_list[[i]]
+  ggplot(data = new.df, aes(x = gen, y = N)) + 
+    geom_line()
+}
+
+# still bupkis
+
 # f) One last bit of fun. Let’s use some dplyr to grab the last 10 rows for each group of r values.
 
 # I made a list of data frames to avoid having to use rbind, but can't use dplyr on a list, sooo... rbind it is
