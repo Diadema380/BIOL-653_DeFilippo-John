@@ -123,12 +123,17 @@ varr_pop
 # Create a dataframe with an initial population using r = 1. This is the 
 # data.frame that we will add rows to.
 
+ninit = 1
+ngen = 100
+r_vals = seq(from = 0.7, to = 3.0, by = 0.1)
+k = 1000
+
 pops <- data.frame(r = 0.6, t = 1:ngen, N = dgrowth(r = 1, ninit = ninit, k = k, ngen = ngen))
 
-for(________){
-  N    <- ________
-  popr <- data.frame(________)
-  pops <- ________
+for(r in r_vals){
+  N    <- dgrowth(r = 1, ninit = ninit, k = k, ngen = ngen)
+  popr <- data.frame(r = r, t = 1:ngen, N = N)
+  pops <- rbind(pops, popr)
 }
 
 # create a list to store each iteration of dgrowth for the different values of r
@@ -150,6 +155,11 @@ pop_list
 
 # e) Yay! Time for more plots! See if you can make this one!
 
+ggplot(data = pops, aes(x = t, y = N)) + 
+  geom_line() +
+  # make facets, and wrap them using the values of r
+  facet_wrap(~r)
+
 # This works to plot an individual plot...
 ggplot(data = pop_list[[11]], aes(x = gen, y = N)) + 
   geom_line()
@@ -159,6 +169,7 @@ graphics.off()
 for (i in 1:length(pop_list)){
   ggplot(data = pop_list[[i]], aes(x = gen, y = N)) + 
     geom_line()
+  facet_wrap(~r)
 }
 
 # ggplot has complained about lists before, so even though each list index is a data frame, let's try putting each list index into a new data frame and plot that
@@ -167,7 +178,7 @@ for (i in 1:length(pop_list)){
   new.df <- pop_list[[i]]
   ggplot(data = new.df, aes(x = gen, y = N)) + 
     geom_line()
-    facet_wrap( ~ r, ncol = 5)
+    facet_wrap( ~ r)
 }
 
 # still bupkis
