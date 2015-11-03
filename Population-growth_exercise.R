@@ -167,6 +167,7 @@ for (i in 1:length(pop_list)){
   new.df <- pop_list[[i]]
   ggplot(data = new.df, aes(x = gen, y = N)) + 
     geom_line()
+    facet_wrap( ~ r, ncol = 5)
 }
 
 # still bupkis
