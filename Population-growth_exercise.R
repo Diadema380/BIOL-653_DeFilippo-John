@@ -123,25 +123,66 @@ varr_pop
 # Create a dataframe with an initial population using r = 1. This is the 
 # data.frame that we will add rows to.
 
+# create global variables for the function argument variables and assign them values outside of the function, so it's easier to change as needed.
 ninit = 1
 ngen = 100
 r_vals = seq(from = 0.7, to = 3.0, by = 0.1)
 k = 1000
 
+# this is Jillian's less desirable rbind method for this problem
 pops <- data.frame(r = 0.6, t = 1:ngen, N = dgrowth(r = 1, ninit = ninit, k = k, ngen = ngen))
-
 for(r in r_vals){
-  N    <- dgrowth(r = 1, ninit = ninit, k = k, ngen = ngen)
+  N <- dgrowth(r = r, ninit = ninit, k = k, ngen = ngen)
+  # r_vals is a vector containing the various values for r, so don't need to do 'for (i in 1:length(r_vals))' in the loop
   popr <- data.frame(r = r, t = 1:ngen, N = N)
   pops <- rbind(pops, popr)
 }
 
+graphics.off()
+ggplot(data = pops, aes(x = t, y = N)) + 
+  geom_line() +
+  # make facets, and wrap them using the values of r
+  facet_wrap(~r)
+
+# an alternate version
+# create an empty data frame and bind to one row of data
+pop_df <- data.frame(r = NA, t = NA, N = NA)
+for (r in r_vals){
+  N <- dgrowth(r = r, ninit = ninit, k = k, ngen = ngen)
+  pop_df.r <- data.frame(r = r, t = 1:ngen, N = N)
+  pop_df <- rbind(pop_df, pop_df.r)
+}
+
+graphics.off()
+ggplot(data = pop_df, aes(x = t, y = N)) + 
+  geom_line() +
+  facet_wrap(~r)
+# geom_path: Each group consist of only one observation. Do you need to adjust the group aesthetic?
+
+# this is her preferred method
+library(plyr)
+pop_list <- list(NA)
+for (i in 1:length(r_vals)){
+  r <- r_vals[i]
+  N <- dgrowth(r = r, ninit = ninit, k = k, ngen = ngen)
+  t <- 1:ngen
+  pop_list[[i]] <-  data.frame(r = r, t = t, N = N)
+  pop.df <- rbind.fill(pop_list)
+}
+
+pop.df
+graphics.off()
+ggplot(data = pop.df, aes(x = t, y = N)) + 
+  geom_line() +
+  facet_wrap(~r)
+
+# this was my version using a list, which isn't useable with ggplot or dplyr
 # create a list to store each iteration of dgrowth for the different values of r
 pop_list <- list()
 N_list <- list()
 # loop dgrowth through each value of r_vals
 for (j in 1:length(r_vals)){
-  N <- dgrowth(r=r_vals[j], ninit = 1, k = 1000, ngen = 100)
+  N <- dgrowth(r = r_vals[j], ninit = 1, k = 1000, ngen = 100)
   N_list[[j]] <- N
   # create a variable that represents ngen
   lgen <- length(N)
@@ -155,6 +196,7 @@ pop_list
 
 # e) Yay! Time for more plots! See if you can make this one!
 
+# ggplot only works with a data frame
 ggplot(data = pops, aes(x = t, y = N)) + 
   geom_line() +
   # make facets, and wrap them using the values of r
